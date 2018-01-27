@@ -4,6 +4,10 @@ import { CORRECT, WRONG, IDLE, AMENDED } from '../matchTypes.js';
 const mapIndexed = R.addIndex(R.map);
 const reduceIndexed = R.addIndex(R.reduce);
 
+export const isCorrect = t => R.propEq('match', CORRECT, t);
+export const isAmended = t => R.propEq('match', AMENDED, t);
+export const isWrong = t => R.propEq('match', WRONG, t);
+
 export function add(stack, newToken) {
   return R.concat(stack, [newToken]);
 }
@@ -18,11 +22,10 @@ function getMatch(exp, typed) {
   }
 
   const expToken = exp.token;
-  const seen = exp.match !== IDLE;
 
   if (expToken === typed) {
 
-    if (seen) {
+    if (exp.everWrong) {
       return AMENDED;
     }
 
@@ -35,9 +38,11 @@ function getMatch(exp, typed) {
 export function matchTokens(exp, typed = []) {
   return mapIndexed((v, idx) => {
     const match = getMatch(v, typed[idx]);
+    const everWrong = (v.amended == null && match === WRONG);
     return {
       ...v,
       match,
+      ...everWrong && { everWrong: true },
     };
   }, exp);
 }
@@ -68,5 +73,3 @@ export function tokenize(textList) {
   )(splits);
 }
 
-export const isCorrect = t => R.propEq('match', CORRECT, t);
-export const isAmended = t => R.propEq('match', AMENDED, t);

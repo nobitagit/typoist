@@ -114,8 +114,16 @@ describe('TextChecker', () => {
       expect(match).toBe(AMENDED);
     });
 
+    it('should preserve the CORRECT match status', () => {
+      const text = tokenize(['some words']);
+      const attempt1 = matchTokens(text, ['s', 'e']);
+      const attempt2 = matchTokens(attempt1, ['s', 'o']);
+      const match = attempt2[0].match;
+      expect(match).toBe(CORRECT);
+    });
 
-    it('should mark previously amended chars as AMENDED if wrong', () => {
+
+    it('should mark previously amended chars as WRONG if wrong', () => {
       const text = tokenize(['some words']);
       const attempt1 = matchTokens(text, ['s', 'e']);
       const attempt2 = matchTokens(attempt1, ['s', 'o']);

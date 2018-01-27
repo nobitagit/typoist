@@ -10,3 +10,9 @@
 .Practice__token--correct {
   background: green;
 }
+.Practice__token--wrong {
+  background: red;
+}
+.Practice__token--amended {
+  background: teal;
+}

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
-import { matchTokens, tokenize, add, isCorrect } from '../TextChecker';
+import {
+  matchTokens, tokenize, add, remove, isCorrect, isWrong, isAmended,
+} from '../TextChecker';
 import './style.css';
+
+const DELETE_KEY_CODE = 8;
 
 const paragraphs = [
  'Mongodb and other tools',
 ];
-
-function onType(evt) {
-  console.log(evt);
-}
 
 export default class Practice extends Component {
   constructor() {
@@ -21,26 +21,46 @@ export default class Practice extends Component {
   }
 
   componentDidMount() {
+    // keyup fires only for printable characters so it will
+    // auto-filter SHIFT,CTRL ecc. for us
+    // see: http://jsfiddle.net/user2314737/543zksjc/3/show/
     window.addEventListener('keypress', this.onType.bind(this));
+    // since DEL is not a printable char we need to listen for
+    // it in order to remove tokens from the stack when the user
+    // is deleting text
+    window.addEventListener('keydown', this.onDelete.bind(this));
   }
 
   onType(evt) {
     console.log(evt);
-    const { typed } = this.state;
+    const { typed, paragraphs } = this.state;
+    const updateTyped = add(typed, evt.key);
     this.setState({
-      typed: add(typed, evt.key),
+      typed: updateTyped,
+      paragraphs: matchTokens(paragraphs, updateTyped),
+    });
+  }
+
+  onDelete(evt) {
+    if (evt.which !== DELETE_KEY_CODE) { return; }
+
+    const { typed, paragraphs } = this.state;
+    const updateTyped = remove(typed)
+    this.setState({
+      typed: updateTyped,
+      paragraphs: matchTokens(paragraphs, updateTyped),
     });
   }
 
   render() {
 
     const {
-      paragraphs,
+      paragraphs: text,
       typed,
     } = this.state;
 
-    const text = matchTokens(paragraphs, typed);
-
+    //const text = matchTokens(paragraphs, typed);
+  console.log(text)
     return (
       <div className="">
         <h2>Practice</h2>
@@ -51,6 +71,8 @@ export default class Practice extends Component {
                 <span key={t.index}
                   className={classNames("Practice__token", {
                     'Practice__token--correct': isCorrect(t),
+                    'Practice__token--wrong': isWrong(t),
+                    'Practice__token--amended': isAmended(t),
                   })}
                 >
                     {t.token}
