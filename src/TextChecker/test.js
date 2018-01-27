@@ -1,4 +1,4 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import { add, remove, tokenize, matchTokens } from './index.js';
 import { CORRECT, WRONG, IDLE, AMENDED } from '../matchTypes.js';
 
@@ -28,6 +28,7 @@ describe('TextChecker', () => {
     it('should properly tokenize a single string', () => {
       const ret = tokenize(['Some random text here.']);
       expect(ret[0]).toEqual({
+        index: 0,
         token: 'S',
         match: IDLE,
       });
@@ -41,6 +42,7 @@ describe('TextChecker', () => {
     it('should return the tokens in the expected format', () => {
       const ret = tokenize(['abc', 'd']);
       expect(ret[4]).toEqual({
+        index: 4,
         token: 'd',
         match: IDLE,
       });
@@ -49,6 +51,7 @@ describe('TextChecker', () => {
     it('should join sentences with a new line token', () => {
       const ret = tokenize(['abc', 'd']);
       expect(ret[3]).toEqual({
+        index: 3,
         token: 'newLine',
         match: IDLE,
       });
@@ -80,7 +83,6 @@ describe('TextChecker', () => {
       const ret = matchTokens(text, ['s', 'o']);
       const [typed, idle] = R.partition(o => o.match !== IDLE, ret);
       expect(R.length(typed)).toBe(2);
-      console.log(typed);
     });
 
     it('should mark correct characters as such', () => {

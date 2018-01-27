@@ -1,4 +1,4 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import { CORRECT, WRONG, IDLE, AMENDED } from '../matchTypes.js';
 
 const mapIndexed = R.addIndex(R.map);
@@ -58,9 +58,15 @@ export function tokenize(textList) {
     match: IDLE,
   };
 
-  return reduceIndexed(
-    (acc, split, i) => i === 0 ? [...split] : [...acc, sep, ...split],
-    [],
-    splits,
-  );
+  return R.pipe(
+    reduceIndexed(
+      (acc, split, i) => i === 0 ? [...split] : [...acc, sep, ...split],
+      [],
+      //splits,
+    ),
+    mapIndexed((o, index) => ({ ...o, index })),
+  )(splits);
 }
+
+export const isCorrect = t => R.propEq('match', CORRECT, t);
+export const isAmended = t => R.propEq('match', AMENDED, t);

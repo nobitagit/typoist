@@ -1,0 +1,12 @@
+.Practice__token {
+  display: inline-block;
+  padding: 5px;
+  background: #e1e1e1;
+  min-height: 20px;
+  min-width: 20px;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+.Practice__token--correct {
+  background: green;
+}
