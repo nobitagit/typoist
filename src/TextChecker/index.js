@@ -38,7 +38,8 @@ function getMatch(exp, typed) {
 export function matchTokens(exp, typed = []) {
   return mapIndexed((v, idx) => {
     const match = getMatch(v, typed[idx]);
-    const everWrong = (v.amended == null && match === WRONG);
+    // mark if it was ever typed wrong.
+    const everWrong = (v.everWrong == null && match === WRONG);
     return {
       ...v,
       match,
