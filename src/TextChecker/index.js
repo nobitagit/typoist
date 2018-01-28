@@ -74,3 +74,11 @@ export function tokenize(textList) {
   )(splits);
 }
 
+export function hasErrors(amount, paragraph) {
+  return R.pipe(
+    R.filter(isWrong),
+    R.length,
+    R.gte(R.__, amount),
+  )(paragraph);
+}
+

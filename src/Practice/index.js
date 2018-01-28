@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import API from '../endpoints';
 import http from '../endpoints/http';
 import {
-  matchTokens, tokenize, add, remove, isCorrect, isWrong, isAmended,
+  matchTokens, tokenize, add, remove, isCorrect, isWrong, isAmended, hasErrors,
 } from '../TextChecker';
 import './style.css';
 
@@ -15,7 +15,6 @@ const paragraphs = [
 
 async function getText() {
   const { text } = await http.get(API.texts);
-  //http.getText().then
   return tokenize(text);
 }
 
@@ -37,30 +36,32 @@ export default class Practice extends Component {
     // it in order to remove tokens from the stack when the user
     // is deleting text
     window.addEventListener('keydown', this.onDelete.bind(this));
-    // fetch('/api/arr')
-    //   .then(res => res.json())
-    //   .then(res => {
-    //     console.log(res);
-    //   })
+
     this.getText();
   }
 
   getText() {
     getText().then(paragraphs => {
-      this.setState({ paragraphs });
+      this.setState({ paragraphs, original: paragraphs });
     });
 
   }
 
   onType(evt) {
-    console.log(evt);
     const { typed, paragraphs } = this.state;
     const updateTyped = add(typed, evt.key);
+    const matched = matchTokens(paragraphs, updateTyped);
     this.setState({
       typed: updateTyped,
-      paragraphs: matchTokens(paragraphs, updateTyped),
+      paragraphs: matched,
     });
 
+    if (hasErrors(2, matched)) {
+      this.setState({
+        paragraphs: this.state.original,
+        typed: [],
+      });
+    }
   }
 
   onDelete(evt) {
@@ -81,8 +82,6 @@ export default class Practice extends Component {
       typed,
     } = this.state;
 
-    //const text = matchTokens(paragraphs, typed);
-  console.log(text)
     return (
       <div className="">
         <h2>Practice</h2>
