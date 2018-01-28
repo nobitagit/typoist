@@ -52,7 +52,7 @@ describe('TextChecker', () => {
       const ret = tokenize(['abc', 'd']);
       expect(ret[3]).toEqual({
         index: 3,
-        token: 'newLine',
+        token: 'Enter',
         match: IDLE,
       });
     });

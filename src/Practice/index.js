@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import API from '../endpoints';
+import http from '../endpoints/http';
 import {
   matchTokens, tokenize, add, remove, isCorrect, isWrong, isAmended,
 } from '../TextChecker';
@@ -10,6 +12,12 @@ const DELETE_KEY_CODE = 8;
 const paragraphs = [
  'Mongodb and other tools',
 ];
+
+async function getText() {
+  const { text } = await http.get(API.texts);
+  //http.getText().then
+  return tokenize(text);
+}
 
 export default class Practice extends Component {
   constructor() {
@@ -29,6 +37,19 @@ export default class Practice extends Component {
     // it in order to remove tokens from the stack when the user
     // is deleting text
     window.addEventListener('keydown', this.onDelete.bind(this));
+    // fetch('/api/arr')
+    //   .then(res => res.json())
+    //   .then(res => {
+    //     console.log(res);
+    //   })
+    this.getText();
+  }
+
+  getText() {
+    getText().then(paragraphs => {
+      this.setState({ paragraphs });
+    });
+
   }
 
   onType(evt) {
@@ -39,6 +60,7 @@ export default class Practice extends Component {
       typed: updateTyped,
       paragraphs: matchTokens(paragraphs, updateTyped),
     });
+
   }
 
   onDelete(evt) {
@@ -64,19 +86,23 @@ export default class Practice extends Component {
     return (
       <div className="">
         <h2>Practice</h2>
-        <div>
+        <div className="Practice__paragraph">
           {
             text.map(t => {
+              const newLine = t.token === 'Enter';
               return (
-                <span key={t.index}
-                  className={classNames("Practice__token", {
-                    'Practice__token--correct': isCorrect(t),
-                    'Practice__token--wrong': isWrong(t),
-                    'Practice__token--amended': isAmended(t),
-                  })}
-                >
-                    {t.token}
-                </span>
+                <React.Fragment key={t.index}>
+                  <span
+                    className={classNames("Practice__token", {
+                      'Practice__token--correct': isCorrect(t),
+                      'Practice__token--wrong': isWrong(t),
+                      'Practice__token--amended': isAmended(t),
+                    })}
+                  >
+                      {newLine ? '↵' : t.token}
+                  </span>
+                  {newLine && <br />}
+                </ React.Fragment>
               );
             })
           }

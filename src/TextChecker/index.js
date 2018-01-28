@@ -60,7 +60,7 @@ export function tokenize(textList) {
     ),
   )(textList);
   const sep = {
-    token: 'newLine',
+    token: 'Enter',
     match: IDLE,
   };
 
