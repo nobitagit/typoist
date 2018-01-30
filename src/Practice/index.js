@@ -40,11 +40,9 @@ export default class Practice extends Component {
     this.getText();
   }
 
-  getText() {
-    getText().then(paragraphs => {
-      this.setState({ paragraphs, original: paragraphs });
-    });
-
+  async getText() {
+    const paragraphs = await getText();
+    this.setState({ paragraphs, original: paragraphs });
   }
 
   onType(evt) {
