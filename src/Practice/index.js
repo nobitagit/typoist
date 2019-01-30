@@ -14,16 +14,22 @@ const paragraphs = [
 ];
 
 async function getText() {
-  const { text } = await http.get(API.texts);
-  return tokenize(text);
+  const buildResponse = ({ errors = [], res = [] }) => ({ errors, res });
+  try {
+    const { text } = await http.get(API.texts);
+    return buildResponse({ res: tokenize(text) });
+  } catch(e) {
+    return buildResponse({ errors: [e] });
+  }
 }
 
 export default class Practice extends Component {
-  constructor() {
-    super();
+  constructor(p) {
+    super(p);
     this.state = {
       paragraphs: tokenize(paragraphs),
       typed: [],
+      errors:[]
     };
   }
 
@@ -41,8 +47,8 @@ export default class Practice extends Component {
   }
 
   async getText() {
-    const paragraphs = await getText();
-    this.setState({ paragraphs, original: paragraphs });
+    const { res: paragraphs, errors } = await getText();
+    this.setState({ paragraphs, original: paragraphs, errors });
   }
 
   onType(evt) {
@@ -78,7 +84,12 @@ export default class Practice extends Component {
     const {
       paragraphs: text,
       typed,
+      errors
     } = this.state;
+
+    if (errors.length) {
+      return <p>Can't retrieve sample text. The API seems to be down at the moment :(</p>
+    }
 
     return (
       <div className="">
