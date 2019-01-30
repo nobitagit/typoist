@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  min-height: 100vh;
+  background: #f3f3f3;
 }
 
 .App-logo {
@@ -8,14 +10,17 @@
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+  background: linear-gradient(to left, #c70041 70%, #480288 100%);
+  height: 50px;
   color: white;
+  text-align: left;
 }
 
 .App-title {
   font-size: 1.5em;
+  padding: 10px;
+  margin: 0;
+  font-weight: 100;
 }
 
 .App-intro {

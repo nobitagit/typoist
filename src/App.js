@@ -8,11 +8,11 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <h1 className="App-title">Typoist</h1>
         </header>
         <Practice />
         <p className="App-intro">
-          Try typing with accuracy.
+          Focus on your accuracy.
         </p>
       </div>
     );

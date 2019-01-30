@@ -9,6 +9,8 @@ import './style.css';
 
 const DELETE_KEY_CODE = 8;
 
+const MAX_ERRORS = 1;
+
 const paragraphs = [
  'Mongodb and other tools',
 ];
@@ -60,7 +62,8 @@ export default class Practice extends Component {
       paragraphs: matched,
     });
 
-    if (hasErrors(2, matched)) {
+    // We allow a max of N errors. One more and you're out
+    if (hasErrors(MAX_ERRORS + 1, matched)) {
       this.setState({
         paragraphs: this.state.original,
         typed: [],
@@ -94,6 +97,7 @@ export default class Practice extends Component {
     return (
       <div className="">
         <h2>Practice</h2>
+        <p>You can make a maximum of {MAX_ERRORS} typing mistake{MAX_ERRORS === 1 ? '' :'s'}</p>
         <div className="Practice__paragraph">
           {
             text.map(t => {
