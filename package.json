@@ -6,7 +6,7 @@
     "classnames": "^2.2.5",
     "http-proxy-middleware": "^0.19.1",
     "immutable": "^3.8.2",
-    "ramda": "^0.25.0",
+    "ramda": "^0.26.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "^2.1.3"
