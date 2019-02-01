@@ -9,13 +9,14 @@
   min-width: 20px;
   vertical-align: middle;
   margin: 2px;
+  border-radius: 5px;
 }
 .Practice__token--correct {
-  background: green;
+  background: #29bb6a;
 }
 .Practice__token--wrong {
-  background: red;
+  background: #ff006a;
 }
 .Practice__token--amended {
-  background: teal;
+  background: gold;
 }
